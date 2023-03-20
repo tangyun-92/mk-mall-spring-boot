@@ -1,7 +1,9 @@
 package com.tang.mk_mall.model.dao;
 
 import com.tang.mk_mall.model.pojo.User;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface UserMapper {
     int deleteByPrimaryKey(Integer id);
 

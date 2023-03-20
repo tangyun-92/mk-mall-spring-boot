@@ -1,7 +1,9 @@
 package com.tang.mk_mall.model.dao;
 
 import com.tang.mk_mall.model.pojo.Cart;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface CartMapper {
     int deleteByPrimaryKey(Integer id);
 

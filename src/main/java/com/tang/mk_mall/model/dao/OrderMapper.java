@@ -1,7 +1,9 @@
 package com.tang.mk_mall.model.dao;
 
 import com.tang.mk_mall.model.pojo.Order;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface OrderMapper {
     int deleteByPrimaryKey(Integer id);
 
