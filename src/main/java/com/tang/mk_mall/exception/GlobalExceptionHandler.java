@@ -15,6 +15,7 @@ public class GlobalExceptionHandler {
 
     private final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    // 系统异常
     @ExceptionHandler(Exception.class)
     @ResponseBody
     public Object handleException(Exception e) {

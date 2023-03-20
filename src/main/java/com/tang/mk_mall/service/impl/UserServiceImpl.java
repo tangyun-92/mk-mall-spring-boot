@@ -5,8 +5,11 @@ import com.tang.mk_mall.exception.MallExceptionEnum;
 import com.tang.mk_mall.model.dao.UserMapper;
 import com.tang.mk_mall.model.pojo.User;
 import com.tang.mk_mall.service.UserService;
+import com.tang.mk_mall.util.MD5Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.security.NoSuchAlgorithmException;
 
 /**
  * UserService 实现类
@@ -33,7 +36,15 @@ public class UserServiceImpl implements UserService {
         // 写到数据库
         User user = new User();
         user.setUsername(userName);
-        user.setPassword(password);
+
+//        user.setPassword(password);
+        // MD5加密
+        try {
+            user.setPassword(MD5Utils.getMD5Str(password));
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
         int count = userMapper.insertSelective(user);
         if (count == 0) {
             throw new MallException(MallExceptionEnum.INSERT_FAILED);
