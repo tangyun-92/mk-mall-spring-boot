@@ -1,6 +1,7 @@
 package com.tang.mk_mall.controller;
 
 import com.tang.mk_mall.common.ApiRestResponse;
+import com.tang.mk_mall.common.Constant;
 import com.tang.mk_mall.exception.MallException;
 import com.tang.mk_mall.exception.MallExceptionEnum;
 import com.tang.mk_mall.model.pojo.User;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * 用户控制器
@@ -28,6 +31,13 @@ public class UserController {
         return userService.getUser();
     }
 
+    /**
+     * 用户注册
+     * @param userName 用户名
+     * @param password 密码
+     * @return
+     * @throws MallException
+     */
     @PostMapping("/register")
     @ResponseBody
     public ApiRestResponse register(@RequestParam("userName") String userName, @RequestParam("password") String password) throws MallException {
@@ -45,6 +55,54 @@ public class UserController {
         }
 
         userService.register(userName, password);
+        return ApiRestResponse.success();
+    }
+
+    /**
+     * 用户登录
+     * @param userName 用户名
+     * @param password 密码
+     * @param session
+     * @return
+     * @throws MallException
+     */
+    @PostMapping("/login")
+    @ResponseBody
+    public ApiRestResponse login(@RequestParam("userName") String userName, @RequestParam("password") String password, HttpSession session) throws MallException {
+        // 用户名不能为空
+        if (StringUtils.isEmpty(userName)) {
+            return ApiRestResponse.error(MallExceptionEnum.NEED_USER_NAME);
+        }
+        // 密码不能为空
+        if (StringUtils.isEmpty(password)) {
+            return ApiRestResponse.error(MallExceptionEnum.NEED_PASSWORD);
+        }
+        User user = userService.login(userName, password);
+        // 过滤掉密码，不返回
+        user.setPassword(null);
+        // 将user对象放到session中
+        session.setAttribute(Constant.MALL_USER, user);
+        return ApiRestResponse.success(user);
+    }
+
+    /**
+     * 更新个性签名
+     * @param session
+     * @param signature
+     * @return
+     * @throws MallException
+     */
+    @PostMapping("/user/update")
+    @ResponseBody
+    public ApiRestResponse updateUserInfo(HttpSession session, @RequestParam("signature") String signature) throws MallException {
+        User currentUser = (User)session.getAttribute(Constant.MALL_USER);
+        if (currentUser == null) {
+            return ApiRestResponse.error(MallExceptionEnum.NEED_LOGIN);
+        }
+        User user = new User();
+        user.setId(currentUser.getId());
+        user.setPersonalizedSignature(signature);
+        userService.updateInformation(user);
         return ApiRestResponse.success();
     }
 }
