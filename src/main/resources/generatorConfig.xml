@@ -5,7 +5,8 @@
 
 <generatorConfiguration>
     <!-- 数据库驱动个人配置 -->
-    <classPathEntry location="D:\java\apache-maven-3.9.0\maven-repository\mysql\mysql-connector-java\8.0.18\mysql-connector-java-8.0.18.jar" />
+<!--    <classPathEntry location="D:\java\apache-maven-3.9.0\maven-repository\mysql\mysql-connector-java\8.0.18\mysql-connector-java-8.0.18.jar" />-->
+    <classPathEntry location="F:\java\apache-maven-3.9.0\MavenRepository\mysql\mysql-connector-java\8.0.18\mysql-connector-java-8.0.18.jar" />
     <context id="MysqlTables" targetRuntime="MyBatis3">
         <property name="autoDelimitKeywords" value="true" />
         <!-- 可以使用``包括字段名，避免字段名与sql保留字冲突报错 -->
@@ -18,7 +19,7 @@
         </commentGenerator>
         <!-- 数据库链接地址账号密码 -->
         <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
-                        connectionURL="jdbc:mysql://127.0.0.1:3307/mk_mall?useUnicode=true&amp;serverTimezone=Asia/Shanghai&amp;characterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull"
+                        connectionURL="jdbc:mysql://127.0.0.1:3306/mk_mall?useUnicode=true&amp;serverTimezone=Asia/Shanghai&amp;characterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull"
                         userId="root"
                         password="12345678">
             <property name="nullCatalogMeansCurrent" value="true"/>

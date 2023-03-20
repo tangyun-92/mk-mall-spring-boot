@@ -6,11 +6,11 @@ package com.tang.mk_mall.exception;
 public class MallException extends Exception {
 
     private final Integer code;
-    private final String msg;
+    private final String message;
 
-    public MallException(Integer code, String msg) {
+    public MallException(Integer code, String message) {
         this.code = code;
-        this.msg = msg;
+        this.message = message;
     }
 
     public MallException(MallExceptionEnum exceptionEnum) {
@@ -21,7 +21,7 @@ public class MallException extends Exception {
         return code;
     }
 
-    public String getMsg() {
-        return msg;
+    public String getMessage() {
+        return message;
     }
 }
