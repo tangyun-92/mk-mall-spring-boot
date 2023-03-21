@@ -8,6 +8,7 @@ import com.tang.mk_mall.model.pojo.Category;
 import com.tang.mk_mall.model.pojo.User;
 import com.tang.mk_mall.model.request.AddCategoryReq;
 import com.tang.mk_mall.model.request.UpdateCategoryReq;
+import com.tang.mk_mall.model.vo.CategoryVO;
 import com.tang.mk_mall.service.CategoryService;
 import com.tang.mk_mall.service.UserService;
 import io.swagger.annotations.Api;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 目录 Controller
@@ -42,7 +44,7 @@ public class CategoryController {
      * @return
      */
     @ApiOperation(value = "后台添加商品分类")
-    @PostMapping("admin/category/add")
+    @PostMapping("/admin/category/add")
     @ResponseBody
     public ApiRestResponse addCategory(HttpSession httpSession, @Valid @RequestBody AddCategoryReq addCategoryReq) {
         categoryService.add(addCategoryReq);
@@ -56,7 +58,7 @@ public class CategoryController {
      * @return
      */
     @ApiOperation(value = "后台更新商品分类")
-    @PostMapping("admin/category/update")
+    @PostMapping("/admin/category/update")
     @ResponseBody
     public ApiRestResponse updateCategory(HttpSession httpSession, @Valid @RequestBody UpdateCategoryReq updateCategoryReq) {
         Category category = new Category();
@@ -66,7 +68,7 @@ public class CategoryController {
     }
 
     @ApiOperation(value = "后台删除商品分类")
-    @PostMapping("admin/category/delete")
+    @PostMapping("/admin/category/delete")
     @ResponseBody
     public ApiRestResponse deleteCategory(@RequestParam Integer id) {
         categoryService.delete(id);
@@ -74,7 +76,7 @@ public class CategoryController {
     }
 
     @ApiOperation(value = "后台商品分类列表")
-    @PostMapping("admin/category/list")
+    @PostMapping("/admin/category/list")
     @ResponseBody
     public ApiRestResponse listCategoryForAdmin(@RequestParam Integer pageNum, @RequestParam Integer pageSize) {
         PageInfo pageInfo = categoryService.listForAdmin(pageNum, pageSize);
@@ -82,11 +84,11 @@ public class CategoryController {
     }
 
     @ApiOperation(value = "前台商品分类列表")
-    @PostMapping("category/list")
+    @PostMapping("/category/list")
     @ResponseBody
-    public ApiRestResponse listCategoryForAdmin(@RequestParam Integer pageNum, @RequestParam Integer pageSize) {
-        PageInfo pageInfo = categoryService.listForAdmin(pageNum, pageSize);
-        return ApiRestResponse.success(pageInfo);
+    public ApiRestResponse listCategoryForCustomer() {
+        List<CategoryVO> categoryVOS = categoryService.listCategoryForCustomer();
+        return ApiRestResponse.success(categoryVOS);
     }
 
 }
