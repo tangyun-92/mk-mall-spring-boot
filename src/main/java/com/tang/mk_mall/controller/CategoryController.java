@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 /**
  * 目录 Controller
@@ -28,10 +29,7 @@ public class CategoryController {
 
     @PostMapping("admin/category/add")
     @ResponseBody
-    public ApiRestResponse addCategory(HttpSession httpSession, @RequestBody AddCategoryReq addCategoryReq) {
-        if (addCategoryReq.getName() == null || addCategoryReq.getOrderNum() == null || addCategoryReq.getParentId() == null || addCategoryReq.getType() == null) {
-            return ApiRestResponse.error(MallExceptionEnum.NAME_NOT_NULL);
-        }
+    public ApiRestResponse addCategory(HttpSession httpSession, @Valid @RequestBody AddCategoryReq addCategoryReq) {
         User currentUser = (User) httpSession.getAttribute(Constant.MALL_USER);
         // 用户未登录
         if (currentUser == null) {
