@@ -43,19 +43,8 @@ public class CategoryController {
     @PostMapping("admin/category/add")
     @ResponseBody
     public ApiRestResponse addCategory(HttpSession httpSession, @Valid @RequestBody AddCategoryReq addCategoryReq) {
-        User currentUser = (User) httpSession.getAttribute(Constant.MALL_USER);
-        // 用户未登录
-        if (currentUser == null) {
-            return ApiRestResponse.error(MallExceptionEnum.NEED_LOGIN);
-        }
-        // 校验是否是管理员
-        boolean adminRole = userService.checkAdminRole(currentUser);
-        if (adminRole) {
-            categoryService.add(addCategoryReq);
-            return ApiRestResponse.success();
-        } else {
-            return ApiRestResponse.error(MallExceptionEnum.NEED_ADMIN);
-        }
+        categoryService.add(addCategoryReq);
+        return ApiRestResponse.success();
     }
 
     /**
@@ -64,23 +53,21 @@ public class CategoryController {
      * @param updateCategoryReq
      * @return
      */
+    @ApiOperation(value = "后台更新商品分类")
     @PostMapping("/admin/category/update")
     @ResponseBody
     public ApiRestResponse updateCategory(HttpSession httpSession, @Valid @RequestBody UpdateCategoryReq updateCategoryReq) {
-        User currentUser = (User) httpSession.getAttribute(Constant.MALL_USER);
-        if (currentUser == null) {
-            return ApiRestResponse.error(MallExceptionEnum.NEED_LOGIN);
-        }
-        // 校验是否是管理员
-        boolean adminRole = userService.checkAdminRole(currentUser);
-        if (adminRole) {
-            Category category = new Category();
-            BeanUtils.copyProperties(updateCategoryReq, category);
-            categoryService.update(category);
-            return ApiRestResponse.success();
-        } else {
-            return ApiRestResponse.error(MallExceptionEnum.NEED_ADMIN);
-        }
+        Category category = new Category();
+        BeanUtils.copyProperties(updateCategoryReq, category);
+        categoryService.update(category);
+        return ApiRestResponse.success();
+    }
+
+    @ApiOperation(value = "后台删除商品分类")
+    @PostMapping("/admin/category/delete")
+    @ResponseBody
+    public ApiRestResponse deleteCategory() {
+        return null;
     }
 
 }
