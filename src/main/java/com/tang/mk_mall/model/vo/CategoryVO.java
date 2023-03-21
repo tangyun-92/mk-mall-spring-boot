@@ -1,10 +1,12 @@
 package com.tang.mk_mall.model.vo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class CategoryVO {
+// 要想被保存在redis中，这里需要实现 Serializable 接口
+public class CategoryVO implements Serializable {
     private Integer id;
 
     private String name;

@@ -11,6 +11,7 @@ import com.tang.mk_mall.model.vo.CategoryVO;
 import com.tang.mk_mall.service.CategoryService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -77,6 +78,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Cacheable(value = "listCategoryForCustomer") // 启用redis【常用的接口/访问量大的接口都可以放入缓存】
     public List<CategoryVO> listCategoryForCustomer() {
         ArrayList<CategoryVO> categoryVOList = new ArrayList<>();
         recursivelyFindCategories(categoryVOList, 0);
