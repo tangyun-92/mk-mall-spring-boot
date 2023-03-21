@@ -74,4 +74,10 @@ public class UserServiceImpl implements UserService {
             throw new MallException(MallExceptionEnum.UPDATE_FAILED);
         }
     }
+
+    @Override
+    public boolean checkAdminRole(User user) {
+        // 1-普通用户 2-管理员
+        return user.getRole().equals(2);
+    }
 }

@@ -12,6 +12,7 @@ public enum MallExceptionEnum {
     WRONG_PASSWORD(1006, "密码错误"),
     NEED_LOGIN(1007, "用户未登录"),
     UPDATE_FAILED(1008, "更新失败"),
+    NEED_ADMIN(1009, "无管理员权限"),
     SYSTEM_ERROR(2000, "系统异常");
 
     /**

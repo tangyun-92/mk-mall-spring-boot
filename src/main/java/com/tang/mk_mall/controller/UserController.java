@@ -105,4 +105,50 @@ public class UserController {
         userService.updateInformation(user);
         return ApiRestResponse.success();
     }
+
+    /**
+     * 退出登录
+     * @param httpSession
+     * @return
+     */
+    @PostMapping("/user/logout")
+    @ResponseBody
+    public ApiRestResponse logout(HttpSession httpSession) {
+        // 清除session信息
+        httpSession.removeAttribute(Constant.MALL_USER);
+        return ApiRestResponse.success();
+    }
+
+    /**
+     * 管理员登录
+     * @param userName
+     * @param password
+     * @param session
+     * @return
+     * @throws MallException
+     */
+    @PostMapping("/adminLogin")
+    @ResponseBody
+    public ApiRestResponse adminLogin(@RequestParam("userName") String userName, @RequestParam("password") String password, HttpSession session) throws MallException {
+        // 用户名不能为空
+        if (StringUtils.isEmpty(userName)) {
+            return ApiRestResponse.error(MallExceptionEnum.NEED_USER_NAME);
+        }
+        // 密码不能为空
+        if (StringUtils.isEmpty(password)) {
+            return ApiRestResponse.error(MallExceptionEnum.NEED_PASSWORD);
+        }
+        User user = userService.login(userName, password);
+        // 校验是否是管理员
+        if (userService.checkAdminRole(user)) {
+            // 是管理员，管理员登录
+            // 过滤掉密码，不返回
+            user.setPassword(null);
+            // 将user对象放到session中
+            session.setAttribute(Constant.MALL_USER, user);
+            return ApiRestResponse.success(user);
+        } else {
+            return ApiRestResponse.error(MallExceptionEnum.NEED_ADMIN);
+        }
+    }
 }
