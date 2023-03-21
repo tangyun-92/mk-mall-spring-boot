@@ -6,25 +6,32 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class AddCategoryReq {
+public class UpdateCategoryReq {
+
+    @NotNull(message = "id不能为null")
+    private Integer id;
 
     @Size(min = 2, max = 5, message = "name必须在 {min} 至 {max} 之间")
-    @NotNull(message = "name不能为null")
-    @ApiModelProperty(value = "分类名称", name = "name", dataType = "String", required = true)
+    @ApiModelProperty(value = "分类名称", name = "name", dataType = "String")
     private String name;
 
-    @NotNull(message = "type不能为null")
     @Max(value = 3, message = "type最大值不能超过3")
-    @ApiModelProperty(value = "分类目录级别：1-一级 2-二级 3-三级", name = "type", dataType = "Integer", required = true)
+    @ApiModelProperty(value = "分类目录级别：1-一级 2-二级 3-三级", name = "type", dataType = "Integer")
     private Integer type;
 
-    @NotNull(message = "parentId不能为null")
-    @ApiModelProperty(value = "父级id：如果是一级目录，父id为0", name = "parentId", dataType = "Integer", required = true)
+    @ApiModelProperty(value = "父级id：如果是一级目录，父id为0", name = "parentId", dataType = "Integer")
     private Integer parentId;
 
-    @NotNull(message = "orderNum不能为null")
-    @ApiModelProperty(value = "目录排序", name = "orderNum", dataType = "Integer", required = true)
+    @ApiModelProperty(value = "目录排序", name = "orderNum", dataType = "Integer")
     private Integer orderNum;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

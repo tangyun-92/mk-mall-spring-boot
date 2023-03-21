@@ -1,14 +1,22 @@
 package com.tang.mk_mall.common;
 
 import com.tang.mk_mall.exception.MallExceptionEnum;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * 通用返回对象
  */
+@ApiModel(value = "result", description = "返回值对象")
 public class ApiRestResponse<T> {
 
+    @ApiModelProperty(value = "状态：200-成功", name = "status", dataType = "Integer")
     private Integer status;
+
+    @ApiModelProperty(value = "信息提示", name = "msg", dataType = "Integer")
     private String msg;
+
+    @ApiModelProperty(value = "返回数据", name = "data", dataType = "T")
     private T data;
 
     private static final int OK_CODE = 200;
