@@ -1,5 +1,7 @@
 package com.tang.mk_mall.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.tang.mk_mall.exception.MallException;
 import com.tang.mk_mall.exception.MallExceptionEnum;
 import com.tang.mk_mall.model.dao.CategoryMapper;
@@ -9,6 +11,8 @@ import com.tang.mk_mall.service.CategoryService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 分类目录 Service
@@ -59,6 +63,14 @@ public class CategoryServiceImpl implements CategoryService {
         if (count == 0) {
             throw new MallException(MallExceptionEnum.DELETE_FAILED);
         }
+    }
+
+    @Override
+    public PageInfo listForAdmin(Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum, pageSize, "type,order_num");
+        List<Category> categoryList = categoryMapper.selectList();
+        PageInfo pageInfo = new PageInfo(categoryList);
+        return pageInfo;
     }
 
 }

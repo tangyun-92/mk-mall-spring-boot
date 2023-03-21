@@ -1,5 +1,6 @@
 package com.tang.mk_mall.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.tang.mk_mall.common.ApiRestResponse;
 import com.tang.mk_mall.common.Constant;
 import com.tang.mk_mall.exception.MallExceptionEnum;
@@ -55,7 +56,7 @@ public class CategoryController {
      * @return
      */
     @ApiOperation(value = "后台更新商品分类")
-    @PostMapping("/admin/category/update")
+    @PostMapping("admin/category/update")
     @ResponseBody
     public ApiRestResponse updateCategory(HttpSession httpSession, @Valid @RequestBody UpdateCategoryReq updateCategoryReq) {
         Category category = new Category();
@@ -65,12 +66,27 @@ public class CategoryController {
     }
 
     @ApiOperation(value = "后台删除商品分类")
-    @PostMapping("/admin/category/delete")
+    @PostMapping("admin/category/delete")
     @ResponseBody
     public ApiRestResponse deleteCategory(@RequestParam Integer id) {
         categoryService.delete(id);
         return ApiRestResponse.success();
     }
 
+    @ApiOperation(value = "后台商品分类列表")
+    @PostMapping("admin/category/list")
+    @ResponseBody
+    public ApiRestResponse listCategoryForAdmin(@RequestParam Integer pageNum, @RequestParam Integer pageSize) {
+        PageInfo pageInfo = categoryService.listForAdmin(pageNum, pageSize);
+        return ApiRestResponse.success(pageInfo);
+    }
+
+    @ApiOperation(value = "前台商品分类列表")
+    @PostMapping("category/list")
+    @ResponseBody
+    public ApiRestResponse listCategoryForAdmin(@RequestParam Integer pageNum, @RequestParam Integer pageSize) {
+        PageInfo pageInfo = categoryService.listForAdmin(pageNum, pageSize);
+        return ApiRestResponse.success(pageInfo);
+    }
 
 }
