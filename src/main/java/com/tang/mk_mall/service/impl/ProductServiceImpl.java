@@ -1,6 +1,5 @@
 package com.tang.mk_mall.service.impl;
 
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.tang.mk_mall.exception.MallException;
@@ -76,5 +75,11 @@ public class ProductServiceImpl implements ProductService {
         productMapper.selectListForAdmin();
         PageInfo pageInfo = new PageInfo(products);
         return pageInfo;
+    }
+
+    @Override
+    public Product detail(Integer id) {
+        Product product = productMapper.selectByPrimaryKey(id);
+        return product;
     }
 }
