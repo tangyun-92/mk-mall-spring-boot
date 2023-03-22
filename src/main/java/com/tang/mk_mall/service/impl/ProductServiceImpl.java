@@ -93,6 +93,11 @@ public class ProductServiceImpl implements ProductService {
         return product;
     }
 
+    /**
+     * 前台商品列表
+     * @param productListReq
+     * @return
+     */
     @Override
     public PageInfo list(ProductListReq productListReq) {
         // 构建Query对象

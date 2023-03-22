@@ -9,6 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,20 +18,21 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Api(tags = "前台商品管理")
 @RestController
+@RequestMapping("/product")
 public class ProductController {
 
     @Autowired
     ProductService productService;
 
     @ApiOperation("商品详情")
-    @PostMapping("/product/detail")
+    @PostMapping("/detail")
     public ApiRestResponse detail(@RequestParam Integer id) {
         Product product = productService.detail(id);
         return ApiRestResponse.success(product);
     }
 
     @ApiOperation("前台商品列表")
-    @PostMapping("/product/list")
+    @PostMapping("/list")
     public ApiRestResponse list(ProductListReq productListReq) {
         PageInfo list = productService.list(productListReq);
         return ApiRestResponse.success(list);
