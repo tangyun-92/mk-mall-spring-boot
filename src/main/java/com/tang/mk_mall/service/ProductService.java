@@ -1,5 +1,6 @@
 package com.tang.mk_mall.service;
 
+import com.github.pagehelper.PageInfo;
 import com.tang.mk_mall.model.pojo.Product;
 import com.tang.mk_mall.model.request.AddProductReq;
 import org.springframework.stereotype.Service;
@@ -15,4 +16,6 @@ public interface ProductService {
     void delete(Integer id);
 
     void batchUpdateSellStatus(Integer[] ids, Integer sellStatus);
+
+    PageInfo listForAdmin(Integer pageNum, Integer pageSize);
 }

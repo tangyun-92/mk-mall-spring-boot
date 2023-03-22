@@ -1,5 +1,8 @@
 package com.tang.mk_mall.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.tang.mk_mall.exception.MallException;
 import com.tang.mk_mall.exception.MallExceptionEnum;
 import com.tang.mk_mall.model.dao.ProductMapper;
@@ -9,6 +12,8 @@ import com.tang.mk_mall.service.ProductService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 商品实现类
@@ -63,5 +68,13 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void batchUpdateSellStatus(Integer[] ids, Integer sellStatus) {
         productMapper.batchUpdateSellStatus(ids, sellStatus);
+    }
+
+    @Override
+    public PageInfo listForAdmin(Integer pageNum, Integer pageSize) {
+        List<Object> products = PageHelper.startPage(pageNum, pageSize);
+        productMapper.selectListForAdmin();
+        PageInfo pageInfo = new PageInfo(products);
+        return pageInfo;
     }
 }

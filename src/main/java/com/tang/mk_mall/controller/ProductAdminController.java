@@ -1,5 +1,6 @@
 package com.tang.mk_mall.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.tang.mk_mall.common.ApiRestResponse;
 import com.tang.mk_mall.common.Constant;
 import com.tang.mk_mall.exception.MallException;
@@ -102,5 +103,12 @@ public class ProductAdminController {
     public ApiRestResponse batchUpdateSellStatus(@RequestParam Integer[] ids, @RequestParam Integer sellStatus) {
         productService.batchUpdateSellStatus(ids, sellStatus);
         return ApiRestResponse.success();
+    }
+
+    @ApiOperation(value = "后台商品列表")
+    @PostMapping("/admin/product/list")
+    public ApiRestResponse list(@RequestParam Integer pageNum, @RequestParam Integer pageSize) {
+        PageInfo pageInfo = productService.listForAdmin(pageNum, pageSize);
+        return ApiRestResponse.success(pageInfo);
     }
 }
