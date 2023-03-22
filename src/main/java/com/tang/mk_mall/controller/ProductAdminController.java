@@ -6,6 +6,7 @@ import com.tang.mk_mall.exception.MallException;
 import com.tang.mk_mall.exception.MallExceptionEnum;
 import com.tang.mk_mall.model.request.AddProductReq;
 import com.tang.mk_mall.service.ProductService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,7 @@ import java.util.UUID;
 /**
  * 后台商品管理 Controller
  */
+@Api(tags = "后台商品管理")
 @RestController // 使用这个注解，方法中就可以不加 @ResponseBody
 public class ProductAdminController {
 

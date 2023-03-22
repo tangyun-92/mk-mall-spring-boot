@@ -6,27 +6,25 @@ import com.tang.mk_mall.exception.MallException;
 import com.tang.mk_mall.exception.MallExceptionEnum;
 import com.tang.mk_mall.model.pojo.User;
 import com.tang.mk_mall.service.UserService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
 /**
  * 用户控制器
  */
-@Controller
+@Api(tags = "用户管理")
+@RestController
 public class UserController {
 
     @Autowired
     UserService userService;
 
     @GetMapping("/test")
-    @ResponseBody
     public User personalPage() {
         return userService.getUser();
     }
@@ -39,7 +37,6 @@ public class UserController {
      * @throws MallException
      */
     @PostMapping("/register")
-    @ResponseBody
     public ApiRestResponse register(@RequestParam("userName") String userName, @RequestParam("password") String password) throws MallException {
         // 用户名不能为空
         if (StringUtils.isEmpty(userName)) {
@@ -67,7 +64,6 @@ public class UserController {
      * @throws MallException
      */
     @PostMapping("/login")
-    @ResponseBody
     public ApiRestResponse login(@RequestParam("userName") String userName, @RequestParam("password") String password, HttpSession session) throws MallException {
         // 用户名不能为空
         if (StringUtils.isEmpty(userName)) {
@@ -93,7 +89,6 @@ public class UserController {
      * @throws MallException
      */
     @PostMapping("/user/update")
-    @ResponseBody
     public ApiRestResponse updateUserInfo(HttpSession session, @RequestParam("signature") String signature) throws MallException {
         User currentUser = (User)session.getAttribute(Constant.MALL_USER);
         if (currentUser == null) {
@@ -112,7 +107,6 @@ public class UserController {
      * @return
      */
     @PostMapping("/user/logout")
-    @ResponseBody
     public ApiRestResponse logout(HttpSession httpSession) {
         // 清除session信息
         httpSession.removeAttribute(Constant.MALL_USER);
@@ -128,7 +122,6 @@ public class UserController {
      * @throws MallException
      */
     @PostMapping("/adminLogin")
-    @ResponseBody
     public ApiRestResponse adminLogin(@RequestParam("userName") String userName, @RequestParam("password") String password, HttpSession session) throws MallException {
         // 用户名不能为空
         if (StringUtils.isEmpty(userName)) {

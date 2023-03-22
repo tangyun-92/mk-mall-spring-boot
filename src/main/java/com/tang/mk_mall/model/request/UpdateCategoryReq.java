@@ -9,6 +9,7 @@ import javax.validation.constraints.Size;
 public class UpdateCategoryReq {
 
     @NotNull(message = "id不能为null")
+    @ApiModelProperty(value = "分类名称", name = "name", dataType = "Integer", required = true)
     private Integer id;
 
     @Size(min = 2, max = 5, message = "name必须在 {min} 至 {max} 之间")
