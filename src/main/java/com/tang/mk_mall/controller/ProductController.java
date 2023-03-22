@@ -1,7 +1,9 @@
 package com.tang.mk_mall.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.tang.mk_mall.common.ApiRestResponse;
 import com.tang.mk_mall.model.pojo.Product;
+import com.tang.mk_mall.model.request.ProductListReq;
 import com.tang.mk_mall.service.ProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,6 +27,13 @@ public class ProductController {
     public ApiRestResponse detail(@RequestParam Integer id) {
         Product product = productService.detail(id);
         return ApiRestResponse.success(product);
+    }
+
+    @ApiOperation("前台商品列表")
+    @PostMapping("/product/list")
+    public ApiRestResponse list(ProductListReq productListReq) {
+        PageInfo list = productService.list(productListReq);
+        return ApiRestResponse.success(list);
     }
 
 }

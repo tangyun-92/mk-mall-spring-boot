@@ -1,6 +1,7 @@
 package com.tang.mk_mall.model.dao;
 
 import com.tang.mk_mall.model.pojo.Product;
+import com.tang.mk_mall.model.query.ProductListQuery;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -25,4 +26,6 @@ public interface ProductMapper {
     int batchUpdateSellStatus(@Param("ids") Integer[] ids, @Param("sellStatus") Integer sellStatus);
 
     List<Product> selectListForAdmin();
+
+    List<Product> selectList(@Param("query") ProductListQuery query);
 }

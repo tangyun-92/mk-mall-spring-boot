@@ -1,7 +1,10 @@
 package com.tang.mk_mall.common;
 
+import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.util.Set;
 
 /**
  * 常量值
@@ -20,5 +23,9 @@ public class Constant {
     @Value("${file.upload.dir}")
     public void setFileUploadDir(String fileUploadDir) {
         FILE_UPLOAD_FIR = fileUploadDir;
+    }
+
+    public interface ProductListOrderBy {
+        Set<String> PRICE_ASC_DESC = Sets.newHashSet("price desc", "price asc");
     }
 }
