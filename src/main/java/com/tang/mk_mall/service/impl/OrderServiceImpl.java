@@ -18,6 +18,7 @@ import com.tang.mk_mall.service.OrderService;
 import com.tang.mk_mall.util.OrderCodeFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     OrderItemMapper orderItemMapper;
 
+    @Transactional(rollbackFor = Exception.class) // 数据库事务-遇到任何异常，事务都会回滚
     @Override
     public String create(CreateOrderReq createOrderReq) {
         // 拿到用户ID
