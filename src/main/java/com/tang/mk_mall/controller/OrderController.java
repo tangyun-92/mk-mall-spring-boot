@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@Api(tags = "订单")
+@Api(tags = "前台订单")
 public class OrderController {
 
     @Autowired
