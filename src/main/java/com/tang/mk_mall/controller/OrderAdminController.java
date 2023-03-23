@@ -26,4 +26,27 @@ public class OrderAdminController {
         PageInfo pageInfo = orderService.listForAdmin(pageNum, pageSize);
         return ApiRestResponse.success(pageInfo);
     }
+
+    /**
+     * 发货：订单状态流程：0-用户已取消 10-未付款 20-已付款 30-已发货 40-交易完成
+     * @return
+     */
+    @PostMapping("/admin/order/delivered")
+    @ApiOperation("后台发货")
+    public ApiRestResponse delivered(@RequestParam String orderNo) {
+        orderService.deliver(orderNo);
+        return ApiRestResponse.success();
+    }
+
+    /**
+     * 完结订单：订单状态流程：0-用户已取消 10-未付款 20-已付款 30-已发货 40-交易完成
+     * 用户与管理员都可以完结订单
+     * @return
+     */
+    @PostMapping("/order/finish")
+    @ApiOperation("完结订单")
+    public ApiRestResponse finish(@RequestParam String orderNo) {
+        orderService.finish(orderNo);
+        return ApiRestResponse.success();
+    }
 }

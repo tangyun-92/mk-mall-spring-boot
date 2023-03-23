@@ -20,6 +20,7 @@ import com.tang.mk_mall.model.vo.OrderItemVO;
 import com.tang.mk_mall.model.vo.OrderVO;
 import com.tang.mk_mall.service.CartService;
 import com.tang.mk_mall.service.OrderService;
+import com.tang.mk_mall.service.UserService;
 import com.tang.mk_mall.util.OrderCodeFactory;
 import com.tang.mk_mall.util.QRCodeGenerator;
 import org.springframework.beans.BeanUtils;
@@ -57,6 +58,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     OrderItemMapper orderItemMapper;
+
+    @Autowired
+    UserService userService;
 
     @Value("${file.upload.ip}")
     String ip;
@@ -309,5 +313,66 @@ public class OrderServiceImpl implements OrderService {
         PageInfo pageInfo = new PageInfo<>(orderList);
         pageInfo.setList(orderVOList);
         return pageInfo;
+    }
+
+    @Override
+    public void pay(String orderNo) {
+        Order order = orderMapper.selectByOrderNo(orderNo);
+        // 查不到订单报错
+        if (order == null) {
+            throw new MallException(MallExceptionEnum.NO_ORDER);
+        }
+        // 订单存在，需要判断所属用户
+        Integer userId = UserFilter.currentUser.getId();
+        if (!order.getUserId().equals(userId)) {
+            throw new MallException(MallExceptionEnum.NO_YOUR_ORDER);
+        }
+        // 如果是未付款的状态，才能进行付款操作
+        if (order.getOrderStatus() == Constant.OrderStatusEnum.NOT_PAID.getCode()) {
+            order.setOrderStatus(Constant.OrderStatusEnum.PAID.getCode());
+            order.setPayTime(new Date());
+            orderMapper.updateByPrimaryKeySelective(order);
+        } else {
+            throw new MallException(MallExceptionEnum.WRONG_ORDER_STATUS);
+        }
+    }
+
+    @Override
+    public void deliver(String orderNo) {
+        Order order = orderMapper.selectByOrderNo(orderNo);
+        // 查不到订单报错
+        if (order == null) {
+            throw new MallException(MallExceptionEnum.NO_ORDER);
+        }
+        // 如果是已付款的状态，才能进行发货操作
+        if (order.getOrderStatus() == Constant.OrderStatusEnum.PAID.getCode()) {
+            order.setOrderStatus(Constant.OrderStatusEnum.DELIVERED.getCode());
+            order.setDeliveryTime(new Date());
+            orderMapper.updateByPrimaryKeySelective(order);
+        } else {
+            throw new MallException(MallExceptionEnum.WRONG_ORDER_STATUS);
+        }
+    }
+
+    @Override
+    public void finish(String orderNo) {
+        Order order = orderMapper.selectByOrderNo(orderNo);
+        // 查不到订单报错
+        if (order == null) {
+            throw new MallException(MallExceptionEnum.NO_ORDER);
+        }
+        // 如果是普通用户，需要校验订单所属-校验是否是普通用户、订单是否属于自己
+        if (!userService.checkAdminRole(UserFilter.currentUser) && !order.getUserId().equals(UserFilter.currentUser.getId())) {
+            throw new MallException(MallExceptionEnum.NO_YOUR_ORDER);
+        }
+
+        // 发货后可以完结订单
+        if (order.getOrderStatus() == Constant.OrderStatusEnum.DELIVERED.getCode()) {
+            order.setOrderStatus(Constant.OrderStatusEnum.FINISHED.getCode());
+            order.setEndTime(new Date());
+            orderMapper.updateByPrimaryKeySelective(order);
+        } else {
+            throw new MallException(MallExceptionEnum.WRONG_ORDER_STATUS);
+        }
     }
 }
