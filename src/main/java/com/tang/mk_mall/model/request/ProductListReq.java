@@ -61,4 +61,14 @@ public class ProductListReq {
         this.categoryId = categoryId;
     }
 
+    @Override
+    public String toString() {
+        return "ProductListReq{" +
+                "keyword='" + keyword + '\'' +
+                ", categoryId=" + categoryId +
+                ", orderBy='" + orderBy + '\'' +
+                ", pageNum=" + pageNum +
+                ", pageSize=" + pageSize +
+                '}';
+    }
 }
