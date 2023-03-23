@@ -18,8 +18,10 @@ public class CreateOrderReq {
     @ApiModelProperty(value = "收货人地址", name = "receiverAddress", dataType = "String", required = true)
     private String receiverAddress;
 
+    @ApiModelProperty(value = "运费：默认为0，包邮", name = "postage", dataType = "Integer")
     private Integer postage = 0;
 
+    @ApiModelProperty(value = "支付类型：默认为1，在线支付", name = "paymentType", dataType = "Integer")
     private Integer paymentType = 1;
 
     public String getReceiverName() {

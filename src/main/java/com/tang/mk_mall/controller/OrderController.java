@@ -2,12 +2,14 @@ package com.tang.mk_mall.controller;
 
 import com.tang.mk_mall.common.ApiRestResponse;
 import com.tang.mk_mall.model.request.CreateOrderReq;
+import com.tang.mk_mall.model.vo.OrderVO;
 import com.tang.mk_mall.service.OrderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -22,6 +24,13 @@ public class OrderController {
     public ApiRestResponse create(@RequestBody CreateOrderReq createOrderReq) {
         String orderNo = orderService.create(createOrderReq);
         return ApiRestResponse.success(orderNo);
+    }
+
+    @PostMapping("/order/detail")
+    @ApiOperation("前台订单详情")
+    public ApiRestResponse detail(@RequestParam String orderNo) {
+        OrderVO orderVO = orderService.detail(orderNo);
+        return ApiRestResponse.success(orderVO);
     }
 
 }
