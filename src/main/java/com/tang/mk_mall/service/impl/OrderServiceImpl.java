@@ -1,5 +1,8 @@
 package com.tang.mk_mall.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.google.zxing.WriterException;
 import com.tang.mk_mall.common.Constant;
 import com.tang.mk_mall.exception.MallException;
 import com.tang.mk_mall.exception.MallExceptionEnum;
@@ -18,13 +21,20 @@ import com.tang.mk_mall.model.vo.OrderVO;
 import com.tang.mk_mall.service.CartService;
 import com.tang.mk_mall.service.OrderService;
 import com.tang.mk_mall.util.OrderCodeFactory;
+import com.tang.mk_mall.util.QRCodeGenerator;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -47,6 +57,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     OrderItemMapper orderItemMapper;
+
+    @Value("${file.upload.ip}")
+    String ip;
 
     @Transactional(rollbackFor = Exception.class) // 数据库事务-遇到任何异常，事务都会回滚
     @Override
@@ -225,5 +238,66 @@ public class OrderServiceImpl implements OrderService {
         orderVO.setOrderItemVOList(orderItemVOList);
         orderVO.setOrderStatusName(Constant.OrderStatusEnum.codeOf(orderVO.getOrderStatus()).getValue());
         return orderVO;
+    }
+
+    @Override
+    public PageInfo listForCustomer(Integer pageNum, Integer pageSize) {
+        Integer userId = UserFilter.currentUser.getId();
+        PageHelper.startPage(pageNum, pageSize);
+        List<Order> orderList = orderMapper.selectForCustomer(userId);
+        List<OrderVO> orderVOList = orderListToOrderVOList(orderList);
+        PageInfo pageInfo = new PageInfo<>(orderList);
+        pageInfo.setList(orderVOList);
+        return pageInfo;
+    }
+
+    private List<OrderVO> orderListToOrderVOList(List<Order> orderList) {
+        ArrayList<OrderVO> orderVOList = new ArrayList<>();
+        for (int i = 0; i < orderList.size(); i++) {
+            Order order =  orderList.get(i);
+            OrderVO orderVO = getOrderVO(order);
+            orderVOList.add(orderVO);
+        }
+        return orderVOList;
+    }
+
+    @Override
+    public void cancel(String orderNo) {
+        Order order = orderMapper.selectByOrderNo(orderNo);
+        // 查不到订单报错
+        if (order == null) {
+            throw new MallException(MallExceptionEnum.NO_ORDER);
+        }
+        // 订单存在，需要判断所属用户
+        Integer userId = UserFilter.currentUser.getId();
+        if (!order.getUserId().equals(userId)) {
+            throw new MallException(MallExceptionEnum.NO_YOUR_ORDER);
+        }
+        // 只有未付款的订单才能取消
+        if (order.getOrderStatus().equals(Constant.OrderStatusEnum.NOT_PAID.getCode())) {
+            order.setOrderStatus(Constant.OrderStatusEnum.CANCELED.getCode());
+            order.setEndTime(new Date());
+            orderMapper.updateByPrimaryKeySelective(order);
+        } else {
+            throw new MallException(MallExceptionEnum.WRONG_ORDER_STATUS);
+        }
+    }
+
+    @Override
+    public String qrcode(String orderNo) {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+
+        String address = ip + ":" + request.getLocalPort();
+        String payUrl = "http://" + address + "/pay?orderNo=" + orderNo;
+        try {
+            QRCodeGenerator.generateQRCodeImage(payUrl, 320, 320, Constant.FILE_UPLOAD_FIR + orderNo + ".png");
+        } catch (WriterException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String pngAddress = "http://" + address + "/images/" + orderNo + ".png";
+        return pngAddress;
     }
 }
